@@ -6,8 +6,8 @@ Client::Client( void )
 	struct sockaddr_in		serv_addr;
 
 	// Creating socket file descriptor
-	if ((_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		perror("Socket failed"); exit(1);
+	if ( (_sock = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
+		perror("Socket creation failed"); exit(1);
 	}
 
 	bzero(&serv_addr, sizeof(serv_addr));
@@ -31,10 +31,14 @@ char			*Client::send( void )
 {
 	char		*rstr = getRandStr();
 	char		buffer[ANSW_LEN];
+	int			ret;
 
-	::send(_sock, rstr, RAND_STR_SIZE, 0);
-	read(_sock, buffer, ANSW_LEN);
-	std::cout << buffer << std::endl;
+	if ( ::send(_sock, rstr, RAND_STR_SIZE, MSG_OOB) < 0 ) {
+		perror("Bad send"); close(_sock); exit(3);
+	}
+	// read(_sock, buffer, ANSW_LEN);
+	ret = recv(_sock, buffer, ANSW_LEN, MSG_WAITALL);
+	std::cout << ret << std::endl;
 
 	return rstr;
 }

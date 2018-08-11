@@ -6,6 +6,15 @@ int			main()
 	Client		c;
 
 	c.send();
+	sleep(3);
+	c.send();
+	sleep(3);
+	c.send();
+	sleep(3);
+	c.send();
+	sleep(3);
+	c.send();
+	sleep(3);
 
 	// while (true)
 	// 	try	{

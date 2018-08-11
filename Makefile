@@ -6,7 +6,7 @@
 #    By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/12/28 19:24:02 by vbrazas           #+#    #+#              #
-#    Updated: 2018/08/11 17:34:46 by vbrazas          ###   ########.fr        #
+#    Updated: 2018/08/11 18:48:38 by vbrazas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,8 @@ clean:
 fclean:
 	make -C $(SERVER_PATH) fclean
 	make -C $(CLIENT_PATH) fclean
+	rm -f $(SERV)
+	rm -f $(CLI)
 re: fclean all
 
 .PHONY: all clean fclean re
