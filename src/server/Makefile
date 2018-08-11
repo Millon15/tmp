@@ -6,7 +6,7 @@
 #    By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/08/02 18:58:59 by vbrazas           #+#    #+#              #
-#    Updated: 2018/08/09 21:16:07 by vbrazas          ###   ########.fr        #
+#    Updated: 2018/08/11 17:34:55 by vbrazas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ CC = clang++
 CFLAGS = #-Wall -Werror -Wextra
 
 INC_PATH = includes/
-IFLAGS = -I $(INC_PATH)
+IFLAGS = -I $(INC_PATH) -I ../../$(INC_PATH)
 
 HFILES = Server
 FILES = Server main
@@ -40,9 +40,7 @@ $(OBJ_PATH)%.o: %.cpp $(HDRS)
 	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
 clean: mclean
-	make clean -C $(LIB_PATH)
 fclean: mfclean
-	make fclean -C $(LIB_PATH)
 re: fclean all
 
 mclean:

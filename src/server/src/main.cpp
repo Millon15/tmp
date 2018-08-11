@@ -5,7 +5,7 @@ int			main()
 {
 	Server		s;
 
-	s.mai();
+	s.recieve();
 
 	return 0;
 }

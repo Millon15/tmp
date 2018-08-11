@@ -5,7 +5,7 @@ int			main()
 {
 	Client		c;
 
-	c.mai();
+	c.send();
 
 	// while (true)
 	// 	try	{
