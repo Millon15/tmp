@@ -17,7 +17,6 @@ public:
 	~Client( void );
 
 	char			*send( void );
-	// void			mai( void );
 };
 
 #endif

@@ -6,7 +6,7 @@ Server::Server( void )
 	int						opt = 1;
 
 	// Creating socket file descriptor
-	if ( (_sock = socket(AF_INET, SOCK_STREAM, 0)) == 0 ) {
+	if ( (_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == 0 ) {
 		perror("Socket creation failed"); exit(1);
 	}
 
@@ -21,7 +21,7 @@ Server::Server( void )
 	if (bind(_sock, (struct sockaddr *)&_address, sizeof(_address)) < 0 ) {
 		perror("Bind failed"); close(_sock); exit(3);
 	}
-	if (listen(_sock, 3) < 0) {
+	if (listen(_sock, LISTEN_BACKLOG) < 0) {
 		perror("Bad listen"); close(_sock); exit(4);
 	}
 }
@@ -39,8 +39,6 @@ void		Server::recieve( void )
 	char		buffer[RAND_STR_SIZE];
 
 	while ( true ) {
-		write(1, "AAA\n", 4);
-		sleep(10);
 		if ( (next = accept(_sock, NULL, NULL)) < 0 ) {
 			perror("Bad accept"); close(_sock); exit(5);
 		}
@@ -52,11 +50,17 @@ void		Server::recieve( void )
 			if ( close(_sock) < 0 ) {
 				perror("Bad close"); close(next); exit(7);
 			}
-			if ( ::send(next, answ, ANSW_LEN, MSG_OOB) < 0 ) {
-				perror("Bad send"); close(next); exit(8);
+
+			while ( true ) {
+				if ( (ret = recv(next, buffer, RAND_STR_SIZE + 1, 0)) < 0 ) {
+					break ;
+				}
+				std::cout << buffer[RAND_STR_SIZE - 1] << " " << ret << std::endl;
+				if ( ::send(next, answ, ANSW_LEN + 1, MSG_OOB) < 0 ) {
+					perror("Bad send"); close(next); exit(8);
+				}
 			}
-			ret = recv(next, buffer, RAND_STR_SIZE, MSG_WAITALL);
-			std::cout << ret << std::endl;
+
 			if ( close(next) < 0 ) {
 				perror("Bad close"); exit(9);
 			}

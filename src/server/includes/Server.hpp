@@ -16,7 +16,6 @@ public:
 	~Server( void );
 
 	void		recieve( void );
-	// void		mai( void );
 };
 
 #endif

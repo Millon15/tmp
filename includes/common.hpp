@@ -2,11 +2,11 @@
 #ifndef COMMON_HPP
 # define COMMON_HPP
 
-# include <sys/socket.h>
 # include <sys/types.h>
-# include <netinet/in.h>
+# include <sys/socket.h>
 # include <sys/uio.h>
 # include <arpa/inet.h>
+# include <netinet/in.h>
 
 # include <unistd.h>
 # include <stdlib.h>

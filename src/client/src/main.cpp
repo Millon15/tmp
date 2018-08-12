@@ -3,26 +3,18 @@
 
 int			main()
 {
-	Client		c;
+	const int	clients_count = 3;
+	Client		c[clients_count];
+	int			i;
 
-	c.send();
-	sleep(3);
-	c.send();
-	sleep(3);
-	c.send();
-	sleep(3);
-	c.send();
-	sleep(3);
-	c.send();
-	sleep(3);
+	for ( i = 0; i < clients_count; i++ ) {
+		c[i].send(); sleep(1);
+	}
 
-	// while (true)
-	// 	try	{
-	// 		c.send();
-	// 	}
-	// 	catch( const std::exception &e ) {
-	// 		std::cerr << e.what() << std::endl;
-	// 	}
+	for ( i = 0; i < clients_count; i++ ) {
+		c[i].send(); sleep(1);
+	}
+
 
 	return 0;
 }
