@@ -1,0 +1,14 @@
+{
+	"C_Cpp.intelliSenseEngineFallback": "Disabled",
+	"files.associations": {
+		"iosfwd": "cpp",
+		"memory": "cpp",
+		"utility": "cpp",
+		"typeinfo": "cpp",
+		"*.tcc": "cpp",
+		"ostream": "cpp",
+		"string": "cpp",
+		"string_view": "cpp"
+	},
+	"C_Cpp.errorSquiggles": "Disabled"
+}
