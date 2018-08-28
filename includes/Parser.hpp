@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:31 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 06:33:14 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 08:12:52 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ private:
 
 //									Main Parser's functions Section
 	void			parseWork( filestype::iterator i );
+	void			validityCheck( trinity &t, char *token, std::string &str );
 
 public:
 	Parser( void );

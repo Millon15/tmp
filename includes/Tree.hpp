@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/27 06:59:51 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 06:54:38 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 07:51:29 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,21 @@
 # include <string>
 # include <list>
 
-class Tree
+struct Tree
 {
-private:
-	int						cur_id;
-
-	static int				id;
-
-	void		validateTag( const std::string &sT );
-
-public:
 	Tree( void );
 	Tree( const std::string &sT, Tree *father = nullptr );
 	~Tree( void );
 
-	std::list< Tree* >		childrens;
-	Tree					*parent;
-	const std::string		&startTag;
+	static int				id;
 
+	std::list< Tree* >		childrens;
+	int						cur_id;
+	Tree					*parent;
+	const std::string		startTag;
+
+	void		validateTag( const std::string &sT );
 	Tree		*addChild( const std::string &sT );
-	Tree		*removeChild( const std::string &sT );
 };
 
 #endif
