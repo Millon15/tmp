@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:31 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 09:07:04 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 11:14:58 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,13 @@
 # include <utility>
 
 # include <Tree.hpp>
+# include <Computer.hpp>
 
 using trinity		= struct s_trinity;
 using filestype		= std::vector< trinity* >;
 using successpair	= std::pair< bool, int >;
 using successtype	= std::list< successpair* >;
+using endtype		= std::list< int* >;
 
 struct		s_trinity
 {
@@ -42,6 +44,7 @@ struct		s_trinity
 	~s_trinity() {}
 
 	successtype			intervals;
+	endtype				end;
 	Tree				*curFather;
 	std::ifstream		*file;
 	const char			*filename;
@@ -55,12 +58,14 @@ private:
 	filestype		_files;
 
 //									Error Section
-	void			putError( const filestype::iterator &i, const std::string &last );
+	void			putError( const trinity &t, const std::string &last );
 	void			putUsage( int ac, const char **ap ) const;
 
 //									Main Parser's functions Section
 	void			parseWork( filestype::iterator i );
 	void			validityCheck( trinity &t, char *token, std::string &str );
+	void			checkAndTranslateIntervals( trinity &t );
+	void			computerWork( endtype::iterator e );
 
 public:
 	Parser( int ac, const char **ap );

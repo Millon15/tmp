@@ -6,7 +6,7 @@
 #    By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/08/13 19:52:44 by vbrazas           #+#    #+#              #
-#    Updated: 2018/08/27 07:00:57 by vbrazas          ###   ########.fr        #
+#    Updated: 2018/08/28 09:42:28 by vbrazas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,8 @@ CFLAGS = -std=c++11#-Wall -Werror -Wextra
 INC_PATH = includes/
 IFLAGS = -I $(INC_PATH)
 
-HFILES = Parser Tree
-CLASSES = Parser Tree
+HFILES = Parser Tree Computer
+CLASSES = Parser Tree Computer
 FILES = main
 
 HDRS = $(addprefix $(INC_PATH), $(addsuffix .hpp, $(HFILES)))

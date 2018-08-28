@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:18 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 09:06:14 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 11:19:14 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ void					Parser::putUsage( int ac, const char **ap ) const
 		);
 	}
 }
-void					Parser::putError( const filestype::iterator &i, const std::string &errmessage )
+void					Parser::putError( const trinity &t, const std::string &errmessage )
 {
-	std::string			errstr( (*i)->filename );
+	std::string			errstr( t.filename );
 
 	errstr += ":onRow ";
-	errstr += std::to_string( (*i)->currow );
+	errstr += std::to_string( t.currow );
 	errstr += ": ";
 	errstr += errmessage;
 
@@ -89,7 +89,7 @@ void					Parser::validityCheck( trinity &t, char *token, std::string &str )
 void					Parser::parseWork( filestype::iterator i )
 {
 	if ( !*(*i)->file )
-		putError( i, "Wrong filename" );
+		putError( **i, "Wrong filename" );
 
 	std::string						str = std::string();
 	char							*token;
@@ -104,11 +104,36 @@ void					Parser::parseWork( filestype::iterator i )
 		{
 			try {
 				validityCheck( **i, token, str );
-			} catch( const std::exception &e ) { putError( i, e.what() ); }
+			} catch( const std::exception &e ) { putError( **i, e.what() ); }
 		}
 	}
 	if ( Tree::id != 0 )
-		putError( i, "Not only all tags have been closed in the document" ); // Hello Klitchko!
+		putError( **i, "Not only all tags have been closed in the document" ); // Hello Klitchko!
+	checkAndTranslateIntervals( **i );
+}
+void					Parser::checkAndTranslateIntervals( trinity &t )
+{
+	int			l = 0;
+	bool		flag[2] = { true, false };
+
+	for ( successtype::iterator i = t.intervals.begin(); i != t.intervals.end(); i++, l++ ) {
+		if ( !(l % 2) ) {
+			if ( flag[0] + flag[1] != true ) {
+				putError( t, "Error occured while parsing intervals" );
+			}
+			flag[0] = false;
+			flag[1] = false;
+			t.end.push_back( new int [2] );
+		}
+		flag[ l % 2 ] = (*i)->first;
+		(*t.end.rbegin())[ l % 2 ] = (*i)->second;
+	}
+}
+void					Parser::computerWork( endtype::iterator e )
+{
+	Computer	C( *e );
+
+	C.computePrime();
 }
 void					Parser::compile( void )
 {
@@ -120,7 +145,19 @@ void					Parser::compile( void )
 		}
 		catch( const std::exception &e ) { std::cerr << e.what() << std::endl; }
 	}
+	for ( std::vector<std::thread>::iterator i = tr.begin(); i != tr.end(); i++ ) {
+		i->join();
+	}
+	tr.clear();
 
+	for ( filestype::iterator i = _files.begin(); i != _files.end(); i++ ) {
+		for ( endtype::iterator l = (*i)->end.begin(); l != (*i)->end.end(); l++ ) {
+			try {
+				tr.push_back( std::thread( &Parser::computerWork, std::ref(*this), l ));
+			}
+			catch( const std::exception &e ) { std::cerr << e.what() << std::endl; }
+		}
+	}
 	for ( std::vector<std::thread>::iterator i = tr.begin(); i != tr.end(); i++ ) {
 		i->join();
 	}
