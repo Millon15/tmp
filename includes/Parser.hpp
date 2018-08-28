@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:31 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 08:12:52 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 09:07:04 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <cctype>
 # include <cstring>
 # include <vector>
+# include <list>
 # include <thread>
 # include <utility>
 
@@ -27,7 +28,8 @@
 
 using trinity		= struct s_trinity;
 using filestype		= std::vector< trinity* >;
-using successtype	= std::vector< std::pair< bool, int >* >;
+using successpair	= std::pair< bool, int >;
+using successtype	= std::list< successpair* >;
 
 struct		s_trinity
 {
@@ -39,7 +41,7 @@ struct		s_trinity
 	{}
 	~s_trinity() {}
 
-	successtype			_intervals;
+	successtype			intervals;
 	Tree				*curFather;
 	std::ifstream		*file;
 	const char			*filename;
@@ -61,7 +63,6 @@ private:
 	void			validityCheck( trinity &t, char *token, std::string &str );
 
 public:
-	Parser( void );
 	Parser( int ac, const char **ap );
 	~Parser( void );
 

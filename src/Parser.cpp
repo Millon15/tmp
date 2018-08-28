@@ -6,16 +6,16 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:18 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 08:13:33 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 09:06:14 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Parser.hpp>
 
-Parser::Parser( void ) {}
 Parser::Parser( int ac, const char **ap )
 {
 	putUsage( ac, ap );
+	_files.reserve(20);
 	for ( int i = 1; i < ac; i++ ) {
 		try {
 			_files.push_back( new trinity(new std::ifstream(ap[i]), ap[i]) );
@@ -25,10 +25,7 @@ Parser::Parser( int ac, const char **ap )
 		}
 	}
 }
-Parser::~Parser( void )
-{
-
-}
+Parser::~Parser( void ) {}
 
 
 void					Parser::putUsage( int ac, const char **ap ) const
@@ -54,6 +51,7 @@ void					Parser::putError( const filestype::iterator &i, const std::string &errm
 void					Parser::validityCheck( trinity &t, char *token, std::string &str )
 {
 	Tree				*parent;
+	std::size_t			checker;
 	std::string			tok = std::string(token);;
 
 	if ( t.curFather == nullptr ) {
@@ -62,10 +60,10 @@ void					Parser::validityCheck( trinity &t, char *token, std::string &str )
 		}
 		t.curFather = new Tree( tok, nullptr );
 	}
-	else if ( isalpha(token[0]) ) {
+	else if ( isalpha(tok[0]) ) {
 		t.curFather = t.curFather->addChild( tok );
 	}
-	else if ( token[0] == '/' ) {
+	else if ( tok[0] == '/' ) {
 		if ( t.curFather->startTag != tok.substr(1) ) {
 			throw std::logic_error("Bad close tag");
 		}
@@ -73,6 +71,20 @@ void					Parser::validityCheck( trinity &t, char *token, std::string &str )
 		delete t.curFather;
 		t.curFather = parent;
 	}
+	else if ( isdigit(tok[0]) ) {
+		if ( t.curFather->startTag == "low>" ) {
+			t.intervals.push_back( new successpair( true, std::stoi(tok.c_str(), &checker) ));
+		}
+		else if ( t.curFather->startTag == "high>" ) {
+			t.intervals.push_back( new successpair( false, std::stoi(tok.c_str(), &checker) ));
+		}
+		else
+			throw std::logic_error("Bag characters ocurred");
+		if ( checker != tok.size() )
+			throw std::logic_error("Bag characters ocurred");
+	}
+	else
+		throw std::logic_error("Bag characters ocurred");
 }
 void					Parser::parseWork( filestype::iterator i )
 {
@@ -82,10 +94,7 @@ void					Parser::parseWork( filestype::iterator i )
 	std::string						str = std::string();
 	char							*token;
 
-	std::ofstream log("log", std::ofstream::out);
-
 	for (; *(*i)->file; str.clear() ) {
-		// str = std::string();
 		std::getline( *(*i)->file, str );
 		(*i)->currow++;
 		
@@ -96,15 +105,10 @@ void					Parser::parseWork( filestype::iterator i )
 			try {
 				validityCheck( **i, token, str );
 			} catch( const std::exception &e ) { putError( i, e.what() ); }
-			// else if ( isdigit(token[0]) )
-			// 		(*i)->parserTree->removeChild( token );
-			// else
-				// putError( i, "Bag characters ocurred" );
 		}
 	}
 	if ( Tree::id != 0 )
 		putError( i, "Not only all tags have been closed in the document" ); // Hello Klitchko!
-	log <<"!!! "<< Tree::id << std::endl;
 }
 void					Parser::compile( void )
 {
