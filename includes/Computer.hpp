@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/28 09:38:05 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 12:08:34 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 13:33:40 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ class Computer
 {
 private:
 	int				*_interval;
+	const char		*_filename;
 
 	int				*initSieve( void );
-	void			printCompution( int *S );
+	void			printCompution( int *S, int k, int n );
+	void			stupidAlgo( int *S, int k, int n );
 
 public:
-	Computer( int *e );
+	Computer( int *e, const char *filename );
 	~Computer( void );
 
 	//									Main Computer's functions Section

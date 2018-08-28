@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:18 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 11:33:29 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 13:39:42 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void					Parser::putError( const trinity &t, const std::string &errmessage )
 
 	throw std::logic_error(errstr);
 }
-void					Parser::validityCheck( trinity &t, char *token, std::string &str )
+void					Parser::validityCheck( trinity &t, char *token )
 {
 	Tree				*parent;
 	std::size_t			checker;
@@ -103,7 +103,7 @@ void					Parser::parseWork( filestype::iterator i )
 			token = ::strtok( NULL, "<\t\n\v\f\r " ))
 		{
 			try {
-				validityCheck( **i, token, str );
+				validityCheck( **i, token );
 			} catch( const std::exception &e ) { putError( **i, e.what() ); }
 		}
 	}
@@ -129,9 +129,9 @@ void					Parser::checkAndTranslateIntervals( trinity &t )
 		(*t.end.rbegin())[ (*i)->first ] = (*i)->second;
 	}
 }
-void					Parser::computerWork( endtype::iterator e )
+void					Parser::computerWork( endtype::iterator e, filestype::iterator i )
 {
-	Computer	C( *e );
+	Computer	C( *e, (*i)->filename );
 
 	C.computePrime();
 }
@@ -153,7 +153,7 @@ void					Parser::compile( void )
 	for ( filestype::iterator i = _files.begin(); i != _files.end(); i++ ) {
 		for ( endtype::iterator l = (*i)->end.begin(); l != (*i)->end.end(); l++ ) {
 			try {
-				tr.push_back( std::thread( &Parser::computerWork, std::ref(*this), l ));
+				tr.push_back( std::thread( &Parser::computerWork, std::ref(*this), l, i ));
 			}
 			catch( const std::exception &e ) { std::cerr << e.what() << std::endl; }
 		}

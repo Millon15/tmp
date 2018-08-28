@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:31 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 11:14:58 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 13:39:23 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ struct		s_trinity
 	{}
 	~s_trinity() {}
 
-	successtype			intervals;
-	endtype				end;
-	Tree				*curFather;
 	std::ifstream		*file;
 	const char			*filename;
 	int					currow;
+	Tree				*curFather;
+	successtype			intervals;
+	endtype				end;
 };
 
 class Parser
@@ -63,9 +63,9 @@ private:
 
 //									Main Parser's functions Section
 	void			parseWork( filestype::iterator i );
-	void			validityCheck( trinity &t, char *token, std::string &str );
+	void			validityCheck( trinity &t, char *token );
 	void			checkAndTranslateIntervals( trinity &t );
-	void			computerWork( endtype::iterator e );
+	void			computerWork( endtype::iterator e, filestype::iterator i );
 
 public:
 	Parser( int ac, const char **ap );

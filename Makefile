@@ -6,7 +6,7 @@
 #    By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/08/13 19:52:44 by vbrazas           #+#    #+#              #
-#    Updated: 2018/08/28 09:42:28 by vbrazas          ###   ########.fr        #
+#    Updated: 2018/08/28 13:37:42 by vbrazas          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRC_PATH = src/
 OBJ_PATH = .obj/
 
 CC = clang++
-CFLAGS = -std=c++11#-Wall -Werror -Wextra
+CFLAGS = -std=c++11 -Wall -Werror -Wextra -O3
 
 INC_PATH = includes/
 IFLAGS = -I $(INC_PATH)
