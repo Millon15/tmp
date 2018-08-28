@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:18 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 11:19:14 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 11:33:29 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void					Parser::checkAndTranslateIntervals( trinity &t )
 			t.end.push_back( new int [2] );
 		}
 		flag[ l % 2 ] = (*i)->first;
-		(*t.end.rbegin())[ l % 2 ] = (*i)->second;
+		(*t.end.rbegin())[ (*i)->first ] = (*i)->second;
 	}
 }
 void					Parser::computerWork( endtype::iterator e )

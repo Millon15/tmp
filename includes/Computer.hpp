@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/28 09:38:05 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/28 11:20:20 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 12:08:34 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@
 class Computer
 {
 private:
-	int			*_interval;
+	int				*_interval;
+
+	int				*initSieve( void );
+	void			printCompution( int *S );
 
 public:
 	Computer( int *e );
