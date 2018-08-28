@@ -6,7 +6,7 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:31 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/27 09:59:37 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 06:33:14 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,59 +17,54 @@
 # include <iostream>
 # include <fstream>
 # include <string>
-# include <cctype> // for isspace()
-# include <cstring> // for strcmp()
+# include <cctype>
+# include <cstring>
 # include <vector>
 # include <thread>
-# include <utility> // for pair
+# include <utility>
 
 # include <Tree.hpp>
 
-# define NEWLINE_CHAR		('\n')
-
-struct		s_trinity
-{
-	s_trinity() : thread(nullptr), file(nullptr), filename(nullptr), currow(0), curcolumn(0) {}
-	s_trinity( std::thread *trd, std::ifstream *fl, const char *fln, int cr = 0, int cc = 0 ) :
-		thread(trd), file(fl), filename(fln), currow(cr), curcolumn(cc) {}
-	~s_trinity() {}
-	std::thread			*thread;
-	std::ifstream		*file;
-	const char			*filename;
-	int					currow;
-	int					curcolumn;
-	bool				is_parent;
-};
-
-class Parser
-{
 using trinity		= struct s_trinity;
 using filestype		= std::vector< trinity* >;
 using successtype	= std::vector< std::pair< bool, int >* >;
 
+struct		s_trinity
+{
+	s_trinity( std::ifstream *fl, const char *fln, int cr = 0 ) :
+		file(fl),
+		filename(fln),
+		currow(cr),
+		curFather(nullptr)
+	{}
+	~s_trinity() {}
+
+	successtype			_intervals;
+	Tree				*curFather;
+	std::ifstream		*file;
+	const char			*filename;
+	int					currow;
+};
+
+class Parser
+{
 private:
 //									Main Parser's vectors Section
 	filestype		_files;
-	Tree			*_parserTree;
-	Tree			*_curFather;
-	successtype		_intervals;
 
 //									Error Section
 	void			putError( const filestype::iterator &i, const std::string &last );
 	void			putUsage( int ac, const char **ap ) const;
 
 //									Main Parser's functions Section
-	void			parseWork( filestype::iterator &i );
-	void			getValue( const filestype::iterator &i, const std::string &last );
-	void			getTag( const filestype::iterator &i, const std::string &last );
-	bool			findAndCompareTag( const filestype::iterator &i, const std::string &last );
+	void			parseWork( filestype::iterator i );
 
 public:
 	Parser( void );
 	Parser( int ac, const char **ap );
 	~Parser( void );
 
-	void			parse( void );
+	void			compile( void );
 };
 
 #endif

@@ -6,21 +6,19 @@
 /*   By: vbrazas <vbrazas@student.unit.ua>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/26 05:32:18 by vbrazas           #+#    #+#             */
-/*   Updated: 2018/08/27 10:09:54 by vbrazas          ###   ########.fr       */
+/*   Updated: 2018/08/28 06:59:04 by vbrazas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Parser.hpp>
 
 Parser::Parser( void ) {}
-Parser::Parser( int ac, const char **ap ) : _parserTree(nullptr)
+Parser::Parser( int ac, const char **ap )
 {
 	putUsage( ac, ap );
-	_intervals.reserve(100);
-	_files.reserve(100);
 	for ( int i = 1; i < ac; i++ ) {
 		try {
-			_files.push_back( new trinity(nullptr, new std::ifstream(ap[i]), ap[i]) );
+			_files.push_back( new trinity(new std::ifstream(ap[i]), ap[i]) );
 		}
 		catch( const std::exception &e ) {
 			std::cerr << e.what() << std::endl;
@@ -29,9 +27,7 @@ Parser::Parser( int ac, const char **ap ) : _parserTree(nullptr)
 }
 Parser::~Parser( void )
 {
-	for ( filestype::iterator i = _files.begin(); i != _files.end(); i++ ) {
-		(*i)->thread->join();
-	}
+
 }
 
 
@@ -48,83 +44,66 @@ void					Parser::putError( const filestype::iterator &i, const std::string &errm
 {
 	std::string			errstr( (*i)->filename );
 
-	errstr += ":";
+	errstr += ":onRow ";
 	errstr += std::to_string( (*i)->currow );
-	errstr += ":";
-	errstr += std::to_string( (*i)->curcolumn );
 	errstr += ": ";
 	errstr += errmessage;
 
 	throw std::logic_error(errstr);
 }
-void					Parser::getTag( const filestype::iterator &i, const std::string &last )
+void					Parser::parseWork( filestype::iterator i )
 {
-	// if ( last[1] == '/' ) {
-	// 	if ( _parserTree == nullptr )										putError( i, "No open tag found" );
-	// 	else {
-	// 		try {
-	// 			_parserTree.removeChild();
-	// 		}
-	// 		catch( const std::exception& e ) {								putError( i, e.what() ); }
-	// }
-	// else if ( last[1] != '/' ) {
-	// 	if ( _parserTree == nullptr ) {
-	// 		if ( last != "root" )											putError( i, "No <root> tag in the start of the file" );
-	// 		_parserTree = new Tree("<root>");
-	// 	}
-	// 	else {
-	// 		try { _curTree = _parserTree.addChild(last); }
-	// 		catch( const std::exception& e ) {								putError( i, e.what() ); }
-	// 	}
-	// }
-}
-void					Parser::getValue( const filestype::iterator &i, const std::string &last )
-{
-	// std::string::size_type		sz;
-	// const int					val = std::stoi(last, &sz);
-	// const std::string			&toCompare = (Tree::last == nullptr) ? std::string() : Tree::last->startTag;
+	if ( !*(*i)->file )
+		putError( i, "Wrong filename" );
 
-	// if ( last.compare(sz, last.npos, "") != 0 )								putError( i, "Bag characters ocurred" );
+	std::string						str;
+	std::string						tok;
+	char							*token;
 
-	// if ( toCompare == "<low>" ) {
-	// 	_intervals.push_back( new std::pair< bool, int >(false, val) );
-	// }
-	// else if ( toCompare == "<high>" ) {
-	// 	_intervals.push_back( new std::pair< bool, int >(true, val) );
-	// }
-	// else																	putError( i, "Bag characters ocurred" );
-}
-void					Parser::parseWork( filestype::iterator &i )
-{
-	// if ( !(*i)->file )															putError( i, "Wrong filename" );
-	// std::string						*last;
-	// char							c;
+	std::ofstream log("log", std::ofstream::out);
 
-	// while ( (*i)->file ) {
-	// 	last = new std::string();
-	// 	// (*i)->file >> std::ws;
-	// 	while ( (c = (*i)->file->get()) && isspace(c) ) {
-	// 		if ( c == NEWLINE_CHAR ) {
-	// 			(*i)->currow++;
-	// 			(*i)->curcolumn = 0;
-	// 		}
-	// 	}
-	// 	*(*i)->file >> *last;
-	// 		 if ( last->empty() )											return ;
-	// 	else if ( (*last)[0] != '<' )							getValue( i, *last );
-	// 	else if ( last->size() > 2 && (*last)[0] == '<' )		getTag( i, *last );
-	// 	else																putError( i, "Bag characters ocurred" );
-	// 	(*i)->curcolumn += last->size();
-	// }
+	while ( *(*i)->file ) {
+		str = std::string();
+		std::getline( *(*i)->file, str );
+		(*i)->currow++;
+		
+		for (token = ::strtok( const_cast<char*>(str.c_str()), "<\t\n\v\f\r " );
+			token;
+			token = ::strtok( NULL, "<" ))
+		{
+			tok = std::string(token);
+			try {
+				log << tok << std::endl;
+				if ( (*i)->curFather == nullptr ) {
+					(*i)->curFather = new Tree( tok, nullptr );
+				}
+				else if ( isalpha(token[0]) ) {
+					(*i)->curFather = (*i)->curFather->addChild( tok );
+				}
+				else if ( token[0] == '/' ) {
+					(*i)->curFather = (*i)->curFather->removeChild( tok );
+				}
+			} catch( const std::exception &e ) { putError( i, e.what() ); }
+
+			// else if ( isdigit(token[0]) )
+			// 		(*i)->parserTree->removeChild( token );
+			// else
+				// putError( i, "Bag characters ocurred" );
+		}
+	}
 }
-void					Parser::parse( void )
+void					Parser::compile( void )
 {
+	std::vector<std::thread>		tr;
+
 	for ( filestype::iterator i = _files.begin(); i != _files.end(); i++ ) {
 		try {
-			(*i)->thread = new std::thread( &Parser::parseWork, std::ref(*this), std::ref(i) );
+			tr.push_back( std::thread( &Parser::parseWork, std::ref(*this), i ));
 		}
-		catch( const std::exception &e ) {
-			std::cerr << e.what() << std::endl;
-		}
+		catch( const std::exception &e ) { std::cerr << e.what() << std::endl; }
+	}
+
+	for ( std::vector<std::thread>::iterator i = tr.begin(); i != tr.end(); i++ ) {
+		i->join();
 	}
 }
