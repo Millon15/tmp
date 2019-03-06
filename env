@@ -1,0 +1,41 @@
+EBUG=true
+YII_ENV=dev
+ 
+VD_KEY=LKZsPszlOvdL4hV2PN40bZAx1D_cMbc5
+
+## Oauth2 42
+#42_API_CI=19d022060e252ac0a93424ab6b93ed55052b792fc384e66ec1f0de4b3fa9b5a1 #client id
+#42_API_CS=0faf6a45f8f0cc853f61f8af715ba85094a7209fee2ad3ac4abd72484ea2875d #secret
+##redirect uri
+#42_API_RU=http://localhost:8888/welcome
+# Oauth2 42
+42_API_CI=4f426b21d671ebca5b8843ad0cd8624cecdcebb23bcd160a8c9e8b1b1238c677 #client id
+42_API_CS=23b6dcb1faa5ea9f201ed8d16f28bf4ef76fa30dd26c31ff8749e68905dbf5d7 #secret
+#redirect uri
+42_API_RU=http://192.168.99.100:8888/welcome
+
+## Mysql config
+#DB_HOST=busin001.mysql.tools
+#DB_NAME=busin001_chea
+#DB_USERNAME=busin001_chea
+#DB_PASSWORD=Y90%y3cN_s
+# Mysql config
+DB_HOST=mysql
+DB_NAME=yii2
+DB_USERNAME=yii2
+DB_PASSWORD=yii2
+UNIX_SOCKET=/var/run/mysqld/mysqld.sock
+
+#YII_ENV_TEST=1
+YII_ENV_DEV=true
+
+GITHUB_API_TOKEN=8081b597efbc9fbe8c8da5110a25636cc4895104
+
+
+
+# VD_KEY=LKZsPszlOvdL4hV2PN40bZAx1D_cMbc5
+# Oauth2 42
+# 42_API_CI=39116ccac4fdaa2adb87e2ed703c40b7025dc8afff9d0e9ad4cd623979a7322
+# 42_API_CS=8c3040bf809e5671238b92b727fa7e594ceb04a6bb736d4dd6b25bea2de170c0
+# Redirect uri
+# 42_API_RU=http://192.168.99.100:8888/welcome
